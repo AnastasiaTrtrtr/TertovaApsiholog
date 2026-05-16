@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Педагог-психолог | Полезные статьи</title>
+    <style>
+        :root {
+            --primary: #5D93E1;
+            --primary-dark: #3A6FC8;
+            --primary-light: #8BB3E8;
+            --text: #2D3748;
+            --text-light: #4A5568;
+            --light: #F7FAFC;
+            --white: #FFFFFF;
+            --border: #E2E8F0;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--light);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            font-weight: 600;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        header {
+            background: var(--white);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav ul li a {
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+        nav ul li a.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 4px;
+        }
+
+        .page-header {
+            padding: 3rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: var(--text);
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 1rem auto 0;
+        }
+
+        .section {
+            padding: 3rem 0;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .article-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .article-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .article-image svg {
+            width: 60px;
+            height: 60px;
+            color: white;
+        }
+
+        .article-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-date {
+            font-size: 0.8rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .article-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--text);
+        }
+
+        .article-excerpt {
+            color: var(--text-light);
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .read-more {
+            color: var(--primary);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .read-more:hover {
+            gap: 0.6rem;
+            color: var(--primary-dark);
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 24px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-right: 2rem;
+        }
+
+        .modal-date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-body {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .modal-body p {
+            margin-bottom: 1rem;
+        }
+
+        .modal-body h4 {
+            margin: 1rem 0 0.5rem;
+            color: var(--text);
+        }
+
+        .modal-body ul {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        footer {
+            background: var(--text);
+            color: var(--white);
+            padding: 3rem 0;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-col h3 {
+            color: var(--white);
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.6rem;
+        }
+
+        .footer-col ul li a {
+            color: rgba(255,255,255,0.6);
+            transition: color 0.2s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+        }
+
+        @media (max-width: 768px) {
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-container {
+                flex-direction: column;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+            .modal-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                Педагог-психолог МБДОУ д/с № 86
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="articles.html" class="active">Статьи</a></li>
+                    <li><a href="test.html">Тест</a></li>
+                    <li><a href="index.html#about">Обо мне</a></li>
+                    <li><a href="index.html#services">Услуги</a></li>
+                    <li><a href="index.html#tips">Советы</a></li>
+                    <li><a href="index.html#contact">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Полезные статьи</h1>
+                <p>Советы и рекомендации по воспитанию, развитию и психологии детей</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="articles-grid">
+                    
+                    <!-- Статья 1 -->
+                    <div class="article-card" data-article="1">
+                        <div class="article-image">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                                <path d="M12 2a10 10 0 0 1 10 10c0 5-10 10-10 10S2 17 2 12 6.5 2 12 2z"></path>
+                                <path d="M12 8v4l3 3"></path>
+                            </svg>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-date">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                15 июня 2026
+                            </div>
+                            <h3 class="article-title">Как помочь ребенку адаптироваться к детскому саду</h3>
+                            <p class="article-excerpt">Адаптация к детскому саду — важный этап в жизни ребенка и родителей. В статье рассказываем, как сделать этот период мягким и безболезненным, на что обратить внимание и какие ошибки избежать.</p>
+                            <button class="read-more" onclick="openArticle(1)">Читать далее →</button>
+                        </div>
+                    </div>
+
+                    <!-- Статья 2 -->
+                    <div class="article-card" data-article="2">
+                        <div class="article-image">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 8v4l3 3"></path>
+                            </svg>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-date">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                2 мая 2026
+                            </div>
+                            <h3 class="article-title">Детские страхи: причины и методы коррекции</h3>
+                            <p class="article-excerpt">Страхи — нормальная часть развития ребенка. Но когда они становятся навязчивыми, требуется помощь. Разбираем основные виды детских страхов и эффективные способы работы с ними.</p>
+                            <button class="read-more" onclick="openArticle(2)">Читать далее →</button>
+                        </div>
+                    </div>
+
+                    <!-- Статья 3 -->
+                    <div class="article-card" data-article="3">
+                        <div class="article-image">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                                <path d="M2 12h20M12 2v20"></path>
+                                <circle cx="12" cy="12" r="10"></circle>
+                            </svg>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-date">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                10 апреля 2026
+                            </div>
+                            <h3 class="article-title">Развитие эмоционального интеллекта у дошкольников</h3>
+                            <p class="article-excerpt">Эмоциональный интеллект — ключевой навык для успешной социализации. Игры и упражнения для развития умения понимать и управлять своими эмоциями.</p>
+                            <button class="read-more" onclick="openArticle(3)">Читать далее →</button>
+                        </div>
+                    </div>
+
+                    <!-- Статья 4 -->
+                    <div class="article-card" data-article="4">
+                        <div class="article-image">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                                <path d="M3 3h18v18H3z"></path>
+                                <path d="M8 7h8M8 12h8M8 17h4"></path>
+                            </svg>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-date">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                12 марта 2026
+                            </div>
+                            <h3 class="article-title">Как справиться с детской истерикой: пошаговое руководство</h3>
+                            <p class="article-excerpt">Истерики у детей — вызов для родителей. В статье представлены конкретные шаги, которые помогут успокоить ребенка и предотвратить новые приступы.</p>
+                            <button class="read-more" onclick="openArticle(4)">Читать далее →</button>
+                        </div>
+                    </div>
+
+                    <!-- Статья 5 -->
+                    <div class="article-card" data-article="5">
+                        <div class="article-image">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3 7 12 12 21 7"></polyline>
+                            </svg>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-date">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                5 февраля 2026
+                            </div>
+                            <h3 class="article-title">Ребенок не хочет учиться: что делать?</h3>
+                            <p class="article-excerpt">Отсутствие мотивации к учебе — частая проблема. Как найти подход к ребенку, пробудить интерес к знаниям и не навредить.</p>
+                            <button class="read-more" onclick="openArticle(5)">Читать далее →</button>
+                        </div>
+                    </div>
+
+                    <!-- Статья 6 -->
+                    <div class="article-card" data-article="6">
+                        <div class="article-image">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 8v4l3 3"></path>
+                            </svg>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-date">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                18 января 2026
+                            </div>
+                            <h3 class="article-title">Как говорить с ребенком о сложных вещах</h3>
+                            <p class="article-excerpt">Доверительный разговор с ребенком — основа здоровых отношений. Советы о том, как обсуждать сложные темы, сохраняя доверие и уважение.</p>
+                            <button class="read-more" onclick="openArticle(6)">Читать далее →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальное окно -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-date" id="modalDate"></div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3>Услуги</h3>
+                    <ul>
+                        <li><a href="index.html#services">Консультации</a></li>
+                        <li><a href="index.html#services">Диагностика</a></li>
+                        <li><a href="index.html#services">Коррекционные занятия</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Информация</h3>
+                    <ul>
+                        <li><a href="articles.html">Статьи</a></li>
+                        <li><a href="test.html">Тест</a></li>
+                        <li><a href="index.html#tips">Советы</a></li>
+                        <li><a href="index.html#faq">Частые вопросы</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li><a href="index.html#contact">Адрес</a></li>
+                        <li><a href="index.html#contact">Телефон</a></li>
+                        <li><a href="index.html#contact">Email</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Соцсети</h3>
+                    <ul>
+                        <li><a href="https://vk.com" target="_blank">VK</a></li>
+                        <li><a href="#" target="_blank">MAXX</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">© 2026 Сайт педагога-психолога МБДОУ д/с №86</div>
+        </div>
+    </footer>
+
+    <script>
+        const articles = {
+            1: {
+                title: "Как помочь ребенку адаптироваться к детскому саду",
+                date: "15 июня 2026",
+                fullText: `
+                    <p>Адаптация к детскому саду — это важный и волнительный этап как для ребенка, так и для родителей. От того, насколько мягко пройдет этот период, зависит дальнейшее отношение ребенка к учебному заведению и социализации в целом.</p>
+                    
+                    <h4>Что такое адаптация?</h4>
+                    <p>Адаптация — это процесс привыкания ребенка к новым условиям: новому распорядку дня, новым людям (воспитателям и детям), новым правилам и требованиям. В среднем адаптация может длиться от 2-3 недель до 2-3 месяцев.</p>
+                    
+                    <h4>Степени адаптации:</h4>
+                    <ul>
+                        <li><strong>Легкая адаптация</strong> (до 1 месяца) — ребенок быстро привыкает, не болеет, с удовольствием идет в сад.</li>
+                        <li><strong>Средняя адаптация</strong> (1-2 месяца) — возможны временные нарушения сна, аппетита, незначительные заболевания.</li>
+                        <li><strong>Тяжелая адаптация</strong> (от 2 до 6 месяцев) — частые болезни, сильный стресс, капризы.</li>
+                    </ul>
+                    
+                    <h4>Как подготовить ребенка к детскому саду:</h4>
+                    <ul>
+                        <li>Заранее рассказывайте ребенку о детском саде, читайте книги, играйте в "детский сад" с игрушками.</li>
+                        <li>Приводите режим дня ребенка к режиму детского сада за 2-3 месяца.</li>
+                        <li>Учите ребенка самостоятельно одеваться, есть, пользоваться горшком.</li>
+                        <li>Сначала оставляйте ребенка на 2-3 часа, постепенно увеличивая время.</li>
+                        <li>Создайте ритуал прощания (объятие, поцелуй, "секретное" рукопожатие).</li>
+                        <li>Никогда не уходите тайком — обязательно прощайтесь, но не затягивайте прощание.</li>
+                        <li>В выходные соблюдайте тот же режим, что и в саду.</li>
+                    </ul>
+                    
+                    <h4>Чего делать нельзя:</h4>
+                    <ul>
+                        <li>Не пугайте ребенка детским садом ("Будешь плохо себя вести — отдам в сад").</li>
+                        <li>Не обсуждайте при ребенке воспитателей или других детей негативно.</li>
+                        <li>Не наказывайте ребенка за слезы при расставании.</li>
+                        <li>Не забирайте ребенка поздно — в период адаптации забирайте одним из первых.</li>
+                    </ul>
+                    
+                    <p>Помните: ваше спокойствие и уверенность передаются ребенку. Если вы верите, что адаптация пройдет успешно, ребенок тоже в это поверит!</p>
+                `
+            },
+            2: {
+                title: "Детские страхи: причины и методы коррекции",
+                date: "2 мая 2026",
+                fullText: `
+                    <p>Страхи — неотъемлемая часть развития ребенка. Они появляются в определенном возрасте и обычно проходят самостоятельно. Но иногда страхи становятся навязчивыми и мешают нормальной жизни ребенка.</p>
+                    
+                    <h4>Возрастные особенности страхов:</h4>
+                    <ul>
+                        <li><strong>1-3 года:</strong> страх разлуки с мамой, боязнь темноты, громких звуков, незнакомых людей.</li>
+                        <li><strong>3-5 лет:</strong> страх сказочных персонажей (Баба-Яга, Волк), боязнь одиночества, страх темноты.</li>
+                        <li><strong>5-7 лет:</strong> страх смерти (своей и родителей), страх школы, неудач, наказания.</li>
+                    </ul>
+                    
+                    <h4>Причины возникновения страхов:</h4>
+                    <ul>
+                        <li>Гиперопека или, наоборот, недостаток внимания со стороны родителей.</li>
+                        <li>Просмотр пугающих мультфильмов, фильмов, новостей.</li>
+                        <li>Пугающие истории от взрослых ("Не будешь слушаться — отдам дяде").</li>
+                        <li>Конфликты в семье, развод родителей.</li>
+                        <li>Тревожность самих родителей, которая передается ребенку.</li>
+                    </ul>
+                    
+                    <h4>Как помочь ребенку справиться со страхом:</h4>
+                    <ul>
+                        <li>Признайте страх ребенка. Не говорите "Это глупости", скажите "Я понимаю, что тебе страшно".</li>
+                        <li>Нарисуйте страх — часто рисование помогает "вытащить" страх наружу и победить его.</li>
+                        <li>Сочините сказку, в которой герой побеждает то, чего боится ребенок.</li>
+                        <li>Не заставляйте ребенка делать то, чего он боится, насильно.</li>
+                        <li>Постепенно приучайте к пугающему объекту (например, включайте ночник вместо полного света).</li>
+                        <li>Используйте игровую терапию — разыгрывайте пугающие ситуации с игрушками.</li>
+                    </ul>
+                    
+                    <h4>Когда нужна помощь психолога:</h4>
+                    <ul>
+                        <li>Страх не проходит более 2-3 месяцев и усиливается.</li>
+                        <li>У ребенка появились тики, энурез, нарушения сна.</li>
+                        <li>Ребенок избегает обычных занятий из-за страха.</li>
+                        <li>Страх мешает общению со сверстниками.</li>
+                    </ul>
+                    
+                    <p>Помните: ваше спокойствие и поддержка — лучшее лекарство от детских страхов. Будьте внимательны к чувствам ребенка, и он вырастет уверенным в себе человеком.</p>
+                `
+            },
+            3: {
+                title: "Развитие эмоционального интеллекта у дошкольников",
+                date: "10 апреля 2026",
+                fullText: `
+                    <p>Эмоциональный интеллект (EQ) — это способность понимать свои и чужие эмоции, управлять ими и использовать эту информацию для решения проблем. Исследования показывают, что EQ часто важнее IQ для успеха в жизни.</p>
+                    
+                    <h4>Из чего состоит эмоциональный интеллект:</h4>
+                    <ul>
+                        <li>Понимание своих эмоций.</li>
+                        <li>Управление своими эмоциями.</li>
+                        <li>Эмпатия — понимание чувств других.</li>
+                        <li>Социальные навыки — умение строить отношения.</li>
+                    </ul>
+                    
+                    <h4>Как развивать эмоциональный интеллект у ребенка:</h4>
+                    <ul>
+                        <li><strong>Называйте эмоции</strong> — "Ты злишься, потому что у тебя отобрали игрушку", "Тебе грустно, потому что мама ушла на работу".</li>
+                        <li><strong>Показывайте свои эмоции</strong> — "Я рада, что ты помог мне", "Я расстроена, потому что мы опоздали".</li>
+                        <li><strong>Используйте "эмоциональные" книги и игры</strong> — "Азбука эмоций", лото "Эмоции".</li>
+                        <li><strong>Разговаривайте о чувствах героев мультфильмов</strong> — "Почему Винни-Пух расстроен?", "Что чувствует Пятачок?"</li>
+                        <li><strong>Учите различать эмоции по картинкам</strong> — показывайте фотографии людей с разными выражениями лица.</li>
+                    </ul>
+                    
+                    <h4>Игры для развития EQ:</h4>
+                    <ul>
+                        <li><strong>"Угадай эмоцию"</strong> — изобразите эмоцию, а ребенок угадывает, что вы чувствуете.</li>
+                        <li><strong>"Эмоциональное лото"</strong> — подбирайте картинки с ситуациями к карточкам с эмоциями.</li>
+                        <li><strong>"Что было бы, если..."</strong> — "Что бы ты почувствовал, если бы нашел потерянную игрушку друга?"</li>
+                        <li><strong>"Копилка эмоций"</strong> — записывайте или рисуйте эмоции, которые ребенок испытал за день.</li>
+                    </ul>
+                    
+                    <h4>Важно помнить:</h4>
+                    <p>Не запрещайте ребенку проявлять негативные эмоции. Гнев, грусть, разочарование — это нормально. Важно научить ребенка выражать эти эмоции приемлемым способом: "Ты можешь злиться, но драться нельзя. Давай разберемся, что случилось".</p>
+                    
+                    <p>Дети с высоким эмоциональным интеллектом легче находят друзей, успешнее учатся и лучше справляются со стрессом. Инвестиции в развитие EQ — это инвестиции в счастливое будущее ребенка.</p>
+                `
+            },
+            4: {
+                title: "Как справиться с детской истерикой: пошаговое руководство",
+                date: "12 марта 2026",
+                fullText: `
+                    <p>Истерика — это бурная эмоциональная реакция ребенка, которая проявляется криком, плачем, падением на пол, топаньем ногами. Чаще всего истерики случаются у детей от 1 до 4 лет, но могут встречаться и у старших дошкольников.</p>
+                    
+                    <h4>Почему случаются истерики:</h4>
+                    <ul>
+                        <li>Нервная система ребенка еще незрелая, он не умеет справляться с сильными эмоциями.</li>
+                        <li>Ребенок переутомлен, голоден или хочет спать.</li>
+                        <li>Ребенок не может выразить словами свои желания.</li>
+                        <li>Ребенок проверяет границы дозволенного.</li>
+                        <li>Привлечение внимания родителей.</li>
+                    </ul>
+                    
+                    <h4>Пошаговый план действий во время истерики:</h4>
+                    <ul>
+                        <li><strong>ШАГ 1. Сохраняйте спокойствие.</strong> Ваше спокойствие — лучшее лекарство. Не кричите и не угрожайте.</li>
+                        <li><strong>ШАГ 2. Обеспечьте безопасность.</strong> Уберите острые предметы, отодвиньте мебель, чтобы ребенок не ударился.</li>
+                        <li><strong>ШАГ 3. Не читайте нотации.</strong> Во время истерики ребенок вас не слышит. Бесполезно что-то объяснять.</li>
+                        <li><strong>ШАГ 4. Дайте ребенку "выплеснуть" эмоции.</strong> Иногда лучше просто быть рядом и ждать.</li>
+                        <li><strong>ШАГ 5. Попробуйте отвлечь.</strong> "Ой, посмотри, какая птичка пролетела!", "А ты видел новую машинку?"</li>
+                        <li><strong>ШАГ 6. Предложите утешение.</strong> Когда ребенок начинает успокаиваться, предложите обнять его, дайте воды.</li>
+                        <li><strong>ШАГ 7. Не поддавайтесь на манипуляции.</strong> Если истерика из-за того, что вы отказались купить игрушку, не меняйте решение.</li>
+                    </ul>
+                    
+                    <h4>Чего делать нельзя:</h4>
+                    <ul>
+                        <li>Не бейте и не трясите ребенка.</li>
+                        <li>Не оставляйте ребенка одного в момент истерики.</li>
+                        <li>Не унижайте ребенка ("Какой ты нехороший").</li>
+                        <li>Не требуйте немедленно успокоиться.</li>
+                    </ul>
+                    
+                    <h4>Как предотвратить истерики:</h4>
+                    <ul>
+                        <li>Соблюдайте режим дня (сон, еда, прогулки).</li>
+                        <li>Предупреждайте о предстоящих изменениях ("Через 10 минут будем уходить").</li>
+                        <li>Давайте ребенку право выбора ("Ты наденешь красную или синюю футболку?").</li>
+                        <li>Учите ребенка выражать эмоции словами ("Мне обидно", "Я злюсь").</li>
+                        <li>Хвалите за хорошее поведение.</li>
+                    </ul>
+                    
+                    <p>Помните: истерики — это нормальный этап развития. Они пройдут, когда ребенок научится управлять своими эмоциями. Ваша задача — быть рядом и показывать пример спокойного поведения.</p>
+                `
+            },
+            5: {
+                title: "Ребенок не хочет учиться: что делать?",
+                date: "5 февраля 2026",
+                fullText: `
+                    <p>Отсутствие желания учиться — одна из самых частых жалоб родителей будущих первоклассников и младших школьников. Важно понять причины и помочь ребенку обрести интерес к знаниям.</p>
+                    
+                    <h4>Причины нежелания учиться:</h4>
+                    <ul>
+                        <li><strong>Страх неудачи.</strong> Ребенок боится ошибиться, получить плохую оценку, быть осмеянным.</li>
+                        <li><strong>Несформированная учебная мотивация.</strong> Ребенок не понимает, зачем нужна школа.</li>
+                        <li><strong>Трудности с усидчивостью и вниманием.</strong> Ребенку трудно сосредоточиться на заданиях.</li>
+                        <li><strong>Проблемы с учителем или одноклассниками.</strong> Конфликты снижают желание идти в школу.</li>
+                        <li><strong>Завышенные требования родителей.</strong> Если требуют только "пятерки", ребенок боится разочаровать.</li>
+                        <li><strong>Отсутствие игры в обучении.</strong> Скучные, однообразные задания не вызывают интереса.</li>
+                    </ul>
+                    
+                    <h4>Что делать родителям:</h4>
+                    <ul>
+                        <li><strong>Показывайте ценность знаний.</strong> Рассказывайте, как знания пригодятся в жизни. Делайте это на примерах.</li>
+                        <li><strong>Создайте позитивное отношение к школе.</strong> Не пугайте ребенка двойками, рассказывайте интересные истории из школьной жизни.</li>
+                        <li><strong>Хвалите за усилия, а не только за результат.</strong> "Молодец, что старался!" — важнее, чем "Молодец, получил пятерку".</li>
+                        <li><strong>Используйте игровые формы обучения.</strong> Решайте примеры в виде приключений, пишите буквы на песке или крупе.</li>
+                        <li><strong>Не делайте уроки вместо ребенка.</strong> Помогайте, объясняйте, но не выполняйте задания за него.</li>
+                        <li><strong>Учитывайте особенности ребенка.</strong> Одному нужно движение во время занятий, другому — тишина и покой.</li>
+                        <li><strong>Ищите то, что нравится ребенку.</strong> Если он любит конструктор — изучайте через него математику, если рисование — письмо.</li>
+                    </ul>
+                    
+                    <h4>Чего делать нельзя:</h4>
+                    <ul>
+                        <li>Не наказывайте учебой (лишать мультиков за ошибки).</li>
+                        <li>Не сравнивайте с другими детьми ("А Петя уже читает, а ты нет").</li>
+                        <li>Не говорите "Это легко" или "Ничего сложного" — если ребенку трудно, это обесценивает его усилия.</li>
+                        <li>Не заставляйте заниматься "из-под палки" — это убьет последний интерес.</li>
+                    </ul>
+                    
+                    <p>Помните: желание учиться закладывается в дошкольном возрасте через игру и любознательность. Поддерживайте интерес ребенка к новому, отвечайте на вопросы, читайте вместе, и любовь к знаниям придет сама.</p>
+                `
+            },
+            6: {
+                title: "Как говорить с ребенком о сложных вещах",
+                date: "18 января 2026",
+                fullText: `
+                    <p>Рано или поздно каждый родитель сталкивается с необходимостью поговорить с ребенком на сложные темы: развод, смерть близкого, насилие, проблемы со здоровьем. Как сделать этот разговор максимально бережным и продуктивным?</p>
+                    
+                    <h4>Общие принципы разговора на сложные темы:</h4>
+                    <ul>
+                        <li><strong>Выберите подходящее время.</strong> Ребенок не должен быть голодным, уставшим или возбужденным. Убедитесь, что у вас достаточно времени.</li>
+                        <li><strong>Говорите честно, но учитывайте возраст.</strong> Не нужно врать, но подробности стоит дозировать. Младшему дошкольнику достаточно простого объяснения, подростку — больше деталей.</li>
+                        <li><strong>Используйте понятные слова.</strong> Избегайте эвфемизмов вроде "уснул навсегда" (это может сформировать страх сна). Говорите "умер", если речь о смерти.</li>
+                        <li><strong>Слушайте и задавайте вопросы.</strong> Дайте ребенку высказаться. Спросите "Что ты об этом думаешь?", "Чего ты боишься?"</li>
+                        <li><strong>Подтверждайте чувства ребенка.</strong> "Я понимаю, что тебе грустно/страшно/обидно. Это нормально."</li>
+                    </ul>
+                    
+                    <h4>Разговор о разводе родителей:</h4>
+                    <ul>
+                        <li>Говорите вместе (оба родителя).</li>
+                        <li>Объясните, что это не вина ребенка.</li>
+                        <li>Расскажите, как изменится жизнь: где и с кем будет жить ребенок, как часто будет видеть второго родителя.</li>
+                        <li>Заверьте, что оба родителя по-прежнему любят ребенка.</li>
+                    </ul>
+                    
+                    <h4>Разговор о смерти близкого:</h4>
+                    <ul>
+                        <li>Используйте слово "умер", а не "уснул" или "ушел".</li>
+                        <li>Объясните, что умерший не чувствует боли, не голоден, не холоден.</li>
+                        <li>Дайте ребенку возможность проститься (похороны, рисунок, письмо).</li>
+                        <li>Будьте готовы к тому, что ребенок будет задавать одни и те же вопросы много раз.</li>
+                    </ul>
+                    
+                    <h4>Разговор о безопасности (телесной, в интернете):</h4>
+                    <ul>
+                        <li>Учите ребенка правильным названиям частей тела.</li>
+                        <li>Объясните правила безопасности: "Никто не имеет права трогать твое тело без разрешения", "Если кто-то просит сделать что-то, что тебя смущает — скажи мне".</li>
+                        <li>Говорите об опасностях в интернете: не общаться с незнакомцами, не отправлять фото, не сообщать личные данные.</li>
+                        <li>Дайте понять, что вы всегда на стороне ребенка и поверите ему.</li>
+                    </ul>
+                    
+                    <h4>Что делать, если вы не знаете, что сказать:</h4>
+                    <p>Признайте это: "Я не знаю точного ответа, давай подумаем вместе" или "Я сейчас не готов об этом говорить, давай вернемся к этому разговору через час". Главное — не отмахиваться от вопроса и не врать.</p>
+                    
+                    <p>Помните: открытый диалог и доверие — основа здоровых отношений с ребенком. Даже самые сложные разговоры сближают, если вы говорите с любовью и уважением.</p>
+                `
+            }
+        };
+
+        function openArticle(articleId) {
+            const article = articles[articleId];
+            if (article) {
+                document.getElementById('modalTitle').textContent = article.title;
+                document.getElementById('modalDate').innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> ${article.date}`;
+                document.getElementById('modalBody').innerHTML = article.fullText;
+                document.getElementById('articleModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('articleModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // Закрытие по клику вне модального окна
+        window.onclick = function(event) {
+            const modal = document.getElementById('articleModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
